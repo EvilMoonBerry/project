@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie'
 
 
 const AuthModel = ({setShowModel,isSignUp, setUser}) => {
-
+    ////preparations for variables
     const [email,setEmail] = useState(null)
     const [password,setPassword] = useState(null)
     const [confirmPassword,setConfirmPassword] = useState(null)
@@ -18,26 +18,20 @@ const AuthModel = ({setShowModel,isSignUp, setUser}) => {
 
     let navigate = useNavigate()
 
-
-    console.log(email,password,error)
-
-
     const handleClick= () =>{
         setShowModel(false)
     }
     
-
+    //when the user wants to log in or make a new user
     const handleSubmit =  (e)=>{
         e.preventDefault()
-        console.log(e)
         
-        console.log(userData +'this is user data')
+        // check if the user wants to log in or create a new user.
         try{
             if(isSignUp && (password !== confirmPassword)){
                 setError('Passwords do not match')
                 return
             } else if (isSignUp && (password === confirmPassword)){
-            console.log('fetching')
             fetch("http://localhost:8000/signup", {
                 method: "POST",
                 headers: {
@@ -47,16 +41,13 @@ const AuthModel = ({setShowModel,isSignUp, setUser}) => {
             })  .then(response => response.json(
                 
             ))
-                .then(data => {
-                        console.log(data)
-                        console.log('success')
+                .then(data => { //When creating a new user or logging in, permission is created for the user to access other pages
                         setCookie('userId',data.userId)
                         setCookie('AuthToken',data.token)
-                        window.location.reload()
+                        window.location.reload() // set cookies with reload
                         
-                }).then(navigate ('/infopage'))
+                }).then(navigate ('/infopage')) //go to info page to fill in user data
         }else if(!isSignUp){
-            console.log(userData)
             fetch("http://localhost:8000/login", {
                 method: "POST",
                 headers: {
@@ -66,28 +57,23 @@ const AuthModel = ({setShowModel,isSignUp, setUser}) => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('got data',data)
-                console.log('success jeejee')
                 setCookie('userId',data.userId)
                 setCookie('AuthToken',data.token)
                 window.location.reload() 
-            }).then(navigate ('/profile'))
+
+            }).then(navigate ('/profile')) // log in go to profile and start matching
         }
 
         }catch(error){
             console.log(error)
         }
-
-        
-        
     }
-
 
     const handleChange = (e) => {
         setUserData({...userData, [e.target.name]: e.target.value})
     }
 
-
+// display login and sign up forms
     return(
         <div className='auth-model'>
             <div className="close-icon" onClick={handleClick}>ⓧ</div>

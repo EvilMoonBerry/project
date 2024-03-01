@@ -2,16 +2,16 @@ import { useState } from "react"
 import Nav from '../components/Nav'
 import {useNavigate} from 'react-router-dom'
 import { useCookies } from "react-cookie"
-import { Grid } from "@mui/material"
-
-
 
 
 const Infopage = () => {
-
+    //preparations for variables
     const [userData, setUserData] = useState()
     const [cookie, setCookie, removeCookie] = useCookies(null)
+    let navigate = useNavigate()
 
+
+    //preparations for user data
     const[formData, setFormData] = useState({ 
         user_id: cookie.userId,
         first_name: '',
@@ -25,17 +25,11 @@ const Infopage = () => {
         url:'',
         about:'',
         matches:[]
-
-
     })
-    let navigate = useNavigate()
 
-
-
+//When user submits data save it to database
     const handleSubmit = (e) => {
-        console.log('submitted')
         e.preventDefault()
-
         try{
             fetch("http://localhost:8000/update", {
                 method: "PUT",
@@ -45,35 +39,28 @@ const Infopage = () => {
                 body: JSON.stringify(formData)
             })
                 .then(data => {
-                        console.log(data)
-                        console.log('success')
-                        window.location.reload()
+                        window.location.reload() //reload window that cookies are set
                         
                 }).then(
-                    navigate ('/profile')
+                    navigate ('/profile') // after submittind info the user is redirected to another page
                 )
-            //make a request
-       
-
         }catch(error){
             console.log(error)
         }
     }
 
+//Setting the dates so that user can see them
     const handleChange = (e) => {
-        console.log('e',e)
-
         const value =e.target.type === 'checkbox' ? e.target.checked : e.target.value
         const name = e.target.name
         console.log('value' +value, 'name' +name)
-
         setFormData((prevState) =>({
             ...prevState,
             [name] : value
         }))
 
     }
-
+//When the for mis submitted set data
     const handChange = (e) => {
         setUserData({...userData, [e.target.name]: e.target.value})
     }

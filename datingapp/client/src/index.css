@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"');
 
+/*help fo formating https://github.com/kubowania/tinder-clone/blob/main/client/src/index.css*/
+
 body {
   margin: 0;
   padding: 0;
@@ -17,7 +19,6 @@ body {
   border-radius: 30px;
   border: none;
 }
-
 
 .secondary-button {
   color: #f009f8;
@@ -49,7 +50,9 @@ body {
 body {
   text-align: center;
 }
----------------------------------------------------
+
+/*Navbar*/
+
 nav {
   width: 100%;
   display: flex;
@@ -80,7 +83,7 @@ nav .nav-button:disabled{
   color: #fff
 }
 
-
+/* Homebage*/
 .overlay{
   width: 100vw;
   height: 100vh;
@@ -88,6 +91,9 @@ nav .nav-button:disabled{
   background: linear-gradient(#890877, #fff);
 }
 
+
+
+/*AuthModel in components*/
 .auth-model {
   position: absolute;
   left: 0;
@@ -126,24 +132,7 @@ nav .nav-button:disabled{
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*-----infopage-----*/
+/*Infopage*/
 
 
 .info-page{
@@ -228,10 +217,7 @@ nav .nav-button:disabled{
 }
 
 
-
-
-
-/*------profilepage-------*/
+/*profilepage*/
 
 .profile_page{
   display: flex;
@@ -263,7 +249,7 @@ nav .nav-button:disabled{
   background-position: center;
 }
 
-
+/*chat*/
 
 .chat-container {
   background-color: rgb(255, 255, 255);
@@ -319,7 +305,7 @@ nav .nav-button:disabled{
   width: 100%;
 }
 
-
+/*chat display*/
 .chat-display,
 .matches-display {
     padding: 20px;
@@ -327,7 +313,7 @@ nav .nav-button:disabled{
     overflow-y: auto;
 }
 
-
+/*chat input*/
 .chat-input{
   padding: 20px;
   display: flex;

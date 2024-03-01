@@ -1,3 +1,5 @@
+//Required paths for variables and functions
+
 var express = require('express');
 var router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -13,7 +15,9 @@ const saltRounds = 10;
 const { v4: uuidv4 } = require('uuid')
 
 
-//GET route. Response with JSON
+
+// Test route
+/*
 router.get("/users", (req, res, next) => {
   Users.findOne({ email: "elli@elli.com" }).then((user) => {//finding exsiting user from database
     if (!user) {
@@ -23,29 +27,28 @@ router.get("/users", (req, res, next) => {
       res.send(user)
     }
   })
-})
+})*/
 
+
+// Answers to post call to make a new user to database
 router.post('/signup',
-  body("Email").isEmail().trim().escape(),
-  body("Password").isLength({ min: 8 }),
+  body("Email").isEmail().trim().escape(), // checking email for funny stuff
+  body("Password").isLength({ min: 8 }), // checking password lenght
   (req, res, next) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) { //if there is error in validationResult send an error back
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(req.body)
     Users.findOne({ email: req.body.Email }).then((user) => { // Search database for existing email. If there is no existing email create a new user
-      const generatedUserId = uuidv4()
-      console.log(generatedUserId)
+      const generatedUserId = uuidv4() //create unique user id
       if (user) {
-        console.log(user)
         return res.status(403).json({ email: "Email already in use." });
       } else {
         bcrypt.hash(req.body.Password, saltRounds, function (err, hash) { //password crypted to bcrypt-format (password,generated salt, function) https://www.npmjs.com/package/bcrypt
           if (err) throw err;
           console.log(hash)
-          const sanitizedEmail = req.body.Email.toLowerCase()
-          Users.create(
+          const sanitizedEmail = req.body.Email.toLowerCase() // making email lowercase for funny business
+          Users.create( //creating a new user with default gender identity and gender intrest
             {
               user_id: generatedUserId,
               email: sanitizedEmail,
@@ -63,7 +66,7 @@ router.post('/signup',
             }
 
           ).save
-          const jwtPayload = {
+          const jwtPayload = { //making a  json web token with user info
             userId: generatedUserId,
             email: sanitizedEmail
           }
@@ -74,7 +77,7 @@ router.post('/signup',
               expiresIn: 120
             },
             (err, token) => {
-              res.json({ token, userId: generatedUserId });
+              res.json({ token, userId: generatedUserId }); //response with token and user_id
               return res.redirect("http://localhost:3000/profile");
             }
           );
@@ -84,17 +87,12 @@ router.post('/signup',
   })
 
 
-//Login using JWT token. With a correct login information, it should return JWT token as a JSON object.
+//An existing user logs in
 router.post('/login',
   body("Email").trim().escape(),
   body("password"),
   (req, res, next) => {
-    console.log(req.body)
-    console.log(req.body.Password)
-    
     Users.findOne({ email: req.body.Email }).then((user) => {//finding exsiting user from database
-      console.log(user.hashed_password)
-      console.log('olen user id', user.user_id)
       if (!user) {
         return res.status(403).json({ message: "No registeration with this email" });
       } else {
@@ -103,7 +101,7 @@ router.post('/login',
           console.log(err);
           if (result) { //Making a JWT token and returning it as a JSON object
             const sanitizedEmail = req.body.Email.toLowerCase()
-            const jwtPayload = {
+            const jwtPayload = { //making a  json web token with user info like in siqnup
               user_id: user.user_id,
               email: sanitizedEmail
             }
@@ -114,7 +112,7 @@ router.post('/login',
                 expiresIn: 120
               },
               (err, token) => {
-                res.json({ token, userId: user.user_id });
+                res.json({ token, userId: user.user_id }); //response with token and user_id
                 return res.redirect("http://localhost:3000/profile");
               }
             );
@@ -130,11 +128,11 @@ router.post('/login',
   });
 
 
+
+// Update users data in database
 router.put('/update',
-  
   (req, res, next) => {
-    console.log(req.body.user_id)
-   //finding exsiting user from database
+   //finding exsiting user from database and update their data
         Users.findOneAndUpdate({user_id: req.body.user_id}, {$set:{
           first_name: req.body.first_name,
           d_bday: req.body.d_bday,
@@ -152,63 +150,41 @@ router.put('/update',
     });
 
 
-
+//Get user one person user data to be displayed as a potential match partner
 router.get('/profilecard/:userId', (req,res,next)=>{
-  console.log(req.params.userId)
   Users.findOne({ user_id: req.params.userId }).then((user) => {
-    console.log(user)
     res.send(user)
 }).catch((err) => console.log(err));
 })
 
 
-
-
-
-
-
+//Get users by gender
 router.get('/usergender/:gender', (req,res,next)=>{
-  console.log('gens ',req.params.gender)
   Users.find({ gender_identity: {$eq: req.params.gender}}).then((users) => {
-    console.log('user gen', users)
-    
-    
     res.send( users)
 }).catch((err) => console.log(err));
 })
 
+//update users match in data base that they have liked
 router.put('/matches',
   (req, res, next) => {
-    console.log('body',req.body.userids)
-    console.log('body',req.body.mUserids)
-    //console.log(req.body.info)
-   //finding exsiting user from database
         Users.findOneAndUpdate({user_id: req.body.userids}, {$push:{
-
           matches: {user_id: req.body.mUserids}
       }},{ upsert: true }).then((updateduser)=>
         console.log(updateduser)).catch ((err) => console.log(err));
 
     });
 
-    
-
-
-
+//Get matched users data from data base and send all of them back
     router.get('/allusers/:ids', (req,res,next)=>{
-      console.log('tänne tultiin')
-      console.log('jehjeh',req.params.ids)
       const userIds = JSON.parse(req.params.ids)
       const useridlist =[]
-      console.log(userIds.length)
       let i = 0
       while (userIds.length>i){
         useridlist.push(userIds[i].user_id)
         i= i+1
       }
-      //console.log('ides',userIds[1].user_id)
-      console.log('list', useridlist)
-      const pipeline =
+      const pipeline = //search all of the matches by user_id that are in useridlist and put their profile data in array
             [
                 {
                     '$match': {
@@ -218,35 +194,23 @@ router.put('/matches',
                     }
                 }
             ]
-            Users.aggregate(pipeline).then((pipe)=>{
-              console.log('pipe',pipe)
-              res.send(pipe)
+            Users.aggregate(pipeline).then((pipe)=>{ //https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/
+              res.send(pipe) //respond with profile data array
             })
-
-      
     })
 
-
+// Get send messages form Messages data base 
     router.get('/messages/:ids', (req,res,next)=>{
-      console.log('tänne tultiin taas')
-      console.log('messages stuff',req.params.ids)
       const userIds = JSON.parse(req.params.ids)
-      console.log('messageIDS',userIds)
-      console.log('ides',userIds.userId)
-      console.log('ides',userIds.coresId)
-
       Messages.find({from_userId: userIds.userId , to_userId: userIds.coresId}).then((mesg)=>{
-        console.log('tetetutululu',mesg)
         res.send(mesg)
       })
       
     })
 
-
+// Add a new message to the message database
     router.post('/newmessage', (req,res,next)=>{
-      console.log('newmessage',req.body)
       Messages.create(req.body).then((message)=>{
-        console.log('created',message)
         res.send(message)
       }).catch ((err) => console.log(err));
     })

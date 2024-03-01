@@ -3,7 +3,7 @@ const { text } = require("express");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-
+// Schema for new users
 let userSchema = new Schema ({
         user_id:{type:String},
         hashed_password:{type: String},

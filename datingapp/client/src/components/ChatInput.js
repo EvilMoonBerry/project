@@ -2,11 +2,12 @@ import { useState } from "react"
 
 
 const ChatInput = ({profileSummary, clickedUser, getUsersMessages, getClickedUsersMessages}) => {
+    //preparations for variables
     const [textArea, setTextarea] = useState(null)
-
     const userId = profileSummary?.user_id
     const clickedId = clickedUser?.user_id
 
+    //Add a new sent message to Messages database
     const addmessages = () =>{
         const message = {
             timestamp: new Date().toISOString(),
@@ -28,7 +29,7 @@ const ChatInput = ({profileSummary, clickedUser, getUsersMessages, getClickedUse
             .then(data => {
                 console.log(data)
                 if(data) {
-                    getClickedUsersMessages()
+                    getClickedUsersMessages()//call thses to update
                     getUsersMessages()
                     setTextarea("")
                 }
@@ -39,9 +40,7 @@ const ChatInput = ({profileSummary, clickedUser, getUsersMessages, getClickedUse
 
     }
 
-
-
-
+//display a textarea for chating
     return (
         <div className="chat-input" >
             

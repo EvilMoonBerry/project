@@ -1,13 +1,6 @@
-import { useState } from "react"
-import Nav from './Nav'
 
 const ChatProfile = ({decendingOrd}) => {
-
-    const [newTimestamp, setNewTimestamp]= useState(null)
-
-    //console.log('decorder',decendingOrd[1].timestamp)
-    //console.log('timestamp test', decendingOrd?.timestamp.toUTCString())
-    //
+//display in chat matched perosn and user, messages and time stamps
     return (
         <>
         <div className="chat-display">

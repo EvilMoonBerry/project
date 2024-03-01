@@ -1,19 +1,15 @@
 import Nav from '../components/Nav'
-//import Button from '@mui/material/Button';
 import { useState } from 'react'
 import AuthModel from '../components/AuthModel'
 
 
 const Homepage = () => {
-
+    //preparations for variables
     const [showModel, setShowModel] = useState(false)
     const [isSignUp,setIsSignUp] =useState(true)
-
     const authToken = false
-
+    // on click change view for user from creating account form to sing in form
     const handClik = () => {
-        console.log('cLICK')
-
         setShowModel(true)
         setIsSignUp(true)
     }
@@ -31,7 +27,6 @@ const Homepage = () => {
                 <button className="primary-button" onClick={handClik}>
                     {authToken ? 'Sing Out' : "Create Account"}
                 </button>
-
                 {showModel && (
                     <AuthModel setShowModel={setShowModel} isSignUp={isSignUp} />
                 )}

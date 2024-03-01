@@ -9,16 +9,16 @@ import {useNavigate} from 'react-router-dom'
 
 
 const Chat = ({profileSummary}) => {
-    console.log('puppipi',profileSummary.matches)
+    //preparations for variables
     const [clicked, setclickedUser] = useState(null)
-    console.log('cliked user',clicked)
     let navigate = useNavigate()
-    
 
+    // user can go back to infopage and change their info
     const goInfopage = () =>{
         navigate ('/infopage')
     }
-
+    
+    //How to make and display chat https://github.com/kubowania/tinder-clone/blob/main/client/src/components/ChatContainer.js
     return (
         <div className="chat-container">
             <ChatHeader profileSummary = {profileSummary}/>

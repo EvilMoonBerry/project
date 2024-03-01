@@ -3,7 +3,7 @@ const { text } = require("express");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-
+// schema for new messages
 let messageSchema = new Schema ({
         timestamp:{type:String},
         from_userId:{type: String},

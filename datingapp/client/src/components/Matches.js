@@ -2,56 +2,43 @@ import { useEffect, useState } from "react"
 import Nav from './Nav'
 
 const Matches = ({matches, setclickedUser}) => {
-
+    //preparations for variables
     const [matchIds, setMatchIds] = useState(null)
-    
-    
+
     const searchMatches =(matcheusers)=>{
-        
         if(matcheusers.length===0){
             console.log('empty list of matches')
         }else{
 
-        const ids = JSON.stringify(matcheusers)
-        console.log('here we are')
-        console.log('liliiiiii',ids)
-        console.log('ids lenght',ids.length)
+        const ids = JSON.stringify(matcheusers) //stringify so that user ids can be passed as a parameter
         try{
-            fetch("http://localhost:8000/allusers/"+ids, {
+            fetch("http://localhost:8000/allusers/"+ids, { //fetch a data list of all users that the user have liked
                 method: "GET",
                 headers: {
                     "Content-type": "application/json"
                 },
             }).then(response => response.json())
                 .then(data => {
-                    console.log('marches',data)
                     setMatchIds(data)
                 })
     }catch(error){
         console.log(error)
     }
-    console.log(matchIds)
     }
 }
-
+//useEffect for geting matched user data 
     useEffect(()=>{
         if(matches){
             const matcheusers = matches.map((user_id)=> user_id)
-            console.log('lulu',matcheusers)
             searchMatches(matcheusers)
-
-            console.log('gigig',matches)
             }
         else{
             console.log('lets wait')
         }
         return () => console.log('cleaning things up in here')
     },[matches])
-    console.log('lenght', matches)
-    console.log('dippidpiiidpidd',matchIds)
-
     
-
+//display matched users
     return (
         <div className="matchs-display">
             {matchIds?.map((match,_index)=>(

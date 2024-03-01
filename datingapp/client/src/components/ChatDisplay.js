@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react"
-
-
 import ChatInput from "./ChatInput"
 import ChatProfile from "./ChatProfile"
 
 
 const ChatDisplay = ({profileSummary, clickedUser}) => {
-
+    //preparations for variables
     const [userMess, setUserMess]= useState(null)
     const [clickedUserMesg, setclickedUsermesg] = useState(null)
     
-
+    //Get messages that are from current user to matched user
     const getUsersMessages=()=>{
         const ids = JSON.stringify({
             userId : profileSummary?.user_id,
@@ -24,18 +22,13 @@ const ChatDisplay = ({profileSummary, clickedUser}) => {
                 },
             })  .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-
-                    console.log('mes',data)
-
                     setUserMess(data)
-                
                 })
     }catch(error){
         console.log(error)
     }
     }
-
+//Get messages that are from matched user to current user
     const getClickedUsersMessages=()=>{
         const ids = JSON.stringify({
             userId : clickedUser?.user_id ,
@@ -49,30 +42,21 @@ const ChatDisplay = ({profileSummary, clickedUser}) => {
                 },
             })  .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-
-                    console.log('mes',data)
-
                     setclickedUsermesg(data)
-                
                 })
     }catch(error){
         console.log(error)
     }
     }
 
-
+// useEffect to get messages
     useEffect(()=>{
-           
             getUsersMessages()
             getClickedUsersMessages()
-            console.log('yyoyoyo', profileSummary)
-            
-            
     },[])
 
     const messages = []
-
+    //formatting current user messages for display
     userMess?.forEach(message =>{
         const formattedMessage = {}
         formattedMessage['name']=profileSummary?.first_name
@@ -81,7 +65,7 @@ const ChatDisplay = ({profileSummary, clickedUser}) => {
         formattedMessage['timestamp'] = message.timestamp
         messages.push(formattedMessage)
     })
-
+//formatting mathced user messages for display
     clickedUserMesg?.forEach(message =>{
         const formattedMessage = {}
         formattedMessage['name']=clickedUser?.first_name
@@ -90,12 +74,7 @@ const ChatDisplay = ({profileSummary, clickedUser}) => {
         formattedMessage['timestamp'] = message.timestamp
         messages.push(formattedMessage)
     })
-
-    console.log('Dippidippi',userMess)
-    console.log('DapaDapa', messages)
-
-
-
+//put messages in time sent order
     const decendingOrd = messages?.sort((a,b) =>{
         a.timestamp.localeCompare(b.timestamp)
     })
@@ -105,7 +84,6 @@ const ChatDisplay = ({profileSummary, clickedUser}) => {
         <ChatInput
         profileSummary={profileSummary} clickedUser={clickedUser} getUsersMessages={getUsersMessages} getClickedUsersMessages={getClickedUsersMessages}
         />
-        
         </>
     )
 }
