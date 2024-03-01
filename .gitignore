@@ -1,0 +1,6 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/datingapp/client/node_modules
+/datingapp/server/node_modules
+
