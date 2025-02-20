@@ -1,3 +1,5 @@
+## This project will not be updated. Updating the dependencies are the responsibility of the user
+
 ## Dating app clone using React, ExpressJS and MongoDB
 
 This is a dating site clone made were the user can register and log in. The user can create a profile and chat with other registered users. 
